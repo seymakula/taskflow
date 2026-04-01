@@ -88,3 +88,4 @@ npm start
 ## 👤 Geliştirici
 - **Ad:** Seyma Kula
 - **Ders:** 3522 Bulut Bilişim
+- Video Linki: https://www.youtube.com/watch?v=gRsnNLLEQ5k
