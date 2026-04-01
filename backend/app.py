@@ -6,7 +6,7 @@ from routes import tasks_bp
 app = Flask(__name__)
 
 # Veritabanı ayarı (şimdilik SQLite, sonra RDS'e geçeceğiz)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///taskflow.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://taskflow_user:Taskflow123!@taskflow-db.cdewe2imkv9k.eu-central-1.rds.amazonaws.com:5432/taskflowdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # CORS ayarı (React'ın API'ye erişmesine izin ver)
