@@ -10,6 +10,7 @@ class Task(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     status = db.Column(db.String(20), default='pending')
+    due_minutes = db.Column(db.Integer, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -18,5 +19,6 @@ class Task(db.Model):
             'title': self.title,
             'description': self.description,
             'status': self.status,
+            'due_minutes': self.due_minutes,
             'created_at': self.created_at.isoformat()
         }

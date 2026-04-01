@@ -277,3 +277,157 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+/* Pomodoro */
+.pomodoro {
+  background: #1a1a2e;
+  border: 1px solid #2a2a3e;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.pomodoro-title {
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.pomodoro-circle {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 20px;
+}
+
+.circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #2a2a3e;
+  stroke-width: 8;
+}
+
+.circle-progress {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.circle-progress.work {
+  stroke: #6c63ff;
+}
+
+.circle-progress.break {
+  stroke: #2ecc71;
+}
+
+.pomodoro-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-display {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.time-label {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+.pomodoro-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.pomo-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pomo-btn:hover {
+  transform: scale(1.05);
+}
+
+.pomo-btn.start {
+  background: linear-gradient(135deg, #6c63ff, #3ecfcf);
+  color: white;
+}
+
+.pomo-btn.stop {
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+  border: 1px solid #f39c12;
+}
+
+.pomo-btn.reset {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.pomodoro-count {
+  color: #888;
+  font-size: 0.9rem;
+  min-height: 20px;
+}
+/* Pomodoro Settings */
+.pomodoro-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 200px;
+  justify-content: space-between;
+}
+
+.setting-row label {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.setting-row input {
+  width: 70px;
+  padding: 8px;
+  background: #0f0f1a;
+  border: 1px solid #6c63ff;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+}
+
+.pomo-btn.settings {
+  background: rgba(108, 99, 255, 0.15);
+  color: #6c63ff;
+  border: 1px solid #6c63ff;
+}

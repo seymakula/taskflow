@@ -1,7 +1,132 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 const API_URL = 'http://3.120.139.109:5000/api';
+
+function Pomodoro() {
+  const [workMinutes, setWorkMinutes] = useState(25);
+  const [breakMinutes, setBreakMinutes] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+  const [pomodoroCount, setPomodoroCount] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const WORK_TIME = workMinutes * 60;
+  const BREAK_TIME = breakMinutes * 60;
+
+  const reset = useCallback(() => {
+    setIsRunning(false);
+    setIsBreak(false);
+    setTimeLeft(workMinutes * 60);
+  }, [workMinutes]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          if (!isBreak) {
+            setPomodoroCount(c => c + 1);
+            setIsBreak(true);
+            return BREAK_TIME;
+          } else {
+            setIsBreak(false);
+            return WORK_TIME;
+          }
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isRunning, isBreak, WORK_TIME, BREAK_TIME]);
+
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const seconds = String(timeLeft % 60).padStart(2, '0');
+  const progress = isBreak
+    ? ((BREAK_TIME - timeLeft) / BREAK_TIME) * 100
+    : ((WORK_TIME - timeLeft) / WORK_TIME) * 100;
+
+  const radius = 54;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+  const applySettings = () => {
+    setIsEditing(false);
+    reset();
+  };
+
+  return (
+    <div className="pomodoro">
+      <h2 className="pomodoro-title">
+        {isBreak ? '☕ Mola Zamanı' : '🍅 Pomodoro'}
+      </h2>
+
+      {isEditing ? (
+        <div className="pomodoro-settings">
+          <div className="setting-row">
+            <label>Çalışma (dk)</label>
+            <input
+              type="number"
+              value={workMinutes}
+              min="1"
+              max="60"
+              onChange={(e) => setWorkMinutes(Number(e.target.value))}
+            />
+          </div>
+          <div className="setting-row">
+            <label>Mola (dk)</label>
+            <input
+              type="number"
+              value={breakMinutes}
+              min="1"
+              max="30"
+              onChange={(e) => setBreakMinutes(Number(e.target.value))}
+            />
+          </div>
+          <button className="pomo-btn start" onClick={applySettings}>
+            ✓ Uygula
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="pomodoro-circle">
+            <svg viewBox="0 0 120 120" className="circle-svg">
+              <circle cx="60" cy="60" r={radius} className="circle-bg" />
+              <circle
+                cx="60" cy="60" r={radius}
+                className={`circle-progress ${isBreak ? 'break' : 'work'}`}
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+              />
+            </svg>
+            <div className="pomodoro-time">
+              <span className="time-display">{minutes}:{seconds}</span>
+              <span className="time-label">{isBreak ? 'Mola' : 'Çalışma'}</span>
+            </div>
+          </div>
+          <div className="pomodoro-buttons">
+            <button
+              className={`pomo-btn ${isRunning ? 'stop' : 'start'}`}
+              onClick={() => setIsRunning(!isRunning)}
+            >
+              {isRunning ? '⏸ Durdur' : '▶ Başlat'}
+            </button>
+            <button className="pomo-btn reset" onClick={reset}>
+              🔄 Sıfırla
+            </button>
+            <button className="pomo-btn settings" onClick={() => { setIsRunning(false); setIsEditing(true); }}>
+              ⚙️
+            </button>
+          </div>
+          <div className="pomodoro-count">
+            {pomodoroCount > 0 && `🍅 ${pomodoroCount} pomodoro tamamlandı`}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -43,9 +168,7 @@ function App() {
   };
 
   const deleteTask = async (id) => {
-    await fetch(`${API_URL}/tasks/${id}`, {
-      method: 'DELETE',
-    });
+    await fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE' });
     fetchTasks();
   };
 
@@ -76,7 +199,8 @@ function App() {
         <p className="subtitle">Görevlerini yönet, hedeflerine ulaş</p>
       </div>
 
-      {/* İstatistik Kartları */}
+      <Pomodoro />
+
       <div className="stats">
         <div className="stat-card total">
           <span className="stat-number">{total}</span>
@@ -92,7 +216,6 @@ function App() {
         </div>
       </div>
 
-      {/* Görev Ekleme Formu */}
       <div className="form">
         <input
           type="text"
@@ -110,7 +233,6 @@ function App() {
         <button onClick={addTask}>+ Görev Ekle</button>
       </div>
 
-      {/* Görev Listesi */}
       <div className="task-list">
         {tasks.length === 0 && (
           <div className="empty">

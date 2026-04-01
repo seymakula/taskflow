@@ -15,7 +15,8 @@ def create_task():
     data = request.get_json()
     task = Task(
         title=data['title'],
-        description=data.get('description', '')
+        description=data.get('description', ''),
+        due_minutes=data.get('due_minutes', None)
     )
     db.session.add(task)
     db.session.commit()
@@ -29,6 +30,7 @@ def update_task(task_id):
     task.title = data.get('title', task.title)
     task.description = data.get('description', task.description)
     task.status = data.get('status', task.status)
+    task.due_minutes = data.get('due_minutes', task.due_minutes)
     db.session.commit()
     return jsonify(task.to_dict())
 
